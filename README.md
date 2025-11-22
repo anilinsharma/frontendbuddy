@@ -14,7 +14,7 @@ A futuristic AI blog console built with Next.js 14 and Tailwind CSS. It lets you
 ## Running locally
 1. Install deps: `npm install`
 2. Start the dev server: `npm run dev`
-3. Open `http://localhost:3000` to use the creator console.
+3. Open `http://localhost:3000` to use the creator console, or `http://localhost:3000/preview` to see the live blog preview.
 
 ## API surface
 - `GET /api/posts` — list posts (with category & writer labels)

@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { SparklesIcon, PlusIcon, TagIcon, BoltIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
+import { SparklesIcon, PlusIcon, TagIcon, BoltIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid';
 
 const neonGradient = 'bg-gradient-to-br from-plasma/40 via-midnight to-midnight border border-plasma/30';
 
@@ -104,6 +105,20 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 space-y-8">
+      <nav className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-slate-300">
+          <span className="h-2 w-2 rounded-full bg-neon shadow-glow" />
+          <span>Admin Console</span>
+        </div>
+        <Link
+          className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-black/30 px-3 py-1.5 text-sm text-slate-100 transition hover:border-neon hover:text-neon"
+          href="/preview"
+        >
+          View blog preview
+          <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+        </Link>
+      </nav>
+
       <header className={`panel glow-border ${neonGradient}`}>
         <div className="flex flex-wrap items-center gap-4">
           <div className="p-3 rounded-xl bg-black/30 border border-white/10">
