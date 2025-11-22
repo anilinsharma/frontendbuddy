@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.panel {
+  @apply bg-panel/70 border border-slate-800/60 rounded-2xl p-6 shadow-glow backdrop-blur-md;
+}
+
+.glow-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(108, 246, 255, 0.5), rgba(168, 85, 247, 0.35));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.badge {
+  @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/5 border border-white/10 text-slate-100;
+}
+
+.input {
+  @apply w-full rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30 transition;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-plasma to-neon px-4 py-2 text-sm font-semibold text-slate-950 shadow-glow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-neon/40;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-lg border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-neon hover:text-neon;
+}
+
+.card-grid {
+  @apply grid gap-4 sm:grid-cols-2 xl:grid-cols-3;
+}
+
+.section-title {
+  @apply text-lg font-semibold text-white flex items-center gap-2;
+}
+
+.section-subtitle {
+  @apply text-sm text-slate-400;
+}

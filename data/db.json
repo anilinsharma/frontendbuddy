@@ -1,0 +1,22 @@
+{
+  "categories": [
+    { "id": "gen-ai", "name": "Generative AI" },
+    { "id": "agents", "name": "Autonomous Agents" },
+    { "id": "edge", "name": "Edge AI" }
+  ],
+  "writers": [
+    { "id": "nova", "name": "Nova Fields", "bio": "Synth designer and prompt engineer." },
+    { "id": "zen", "name": "Zen Rios", "bio": "AI product strategist & signal hunter." }
+  ],
+  "posts": [
+    {
+      "id": "launch-burst",
+      "title": "Neon Launch: 5 Signals We Track Next Week",
+      "categoryId": "gen-ai",
+      "writerId": "nova",
+      "tags": ["roadmap", "vision"],
+      "spotlight": true,
+      "publishedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
