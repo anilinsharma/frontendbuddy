@@ -309,6 +309,51 @@ footer {
   flex-wrap: wrap;
 }
 
+.stacked-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 320px;
+}
+
+.control-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-weight: 600;
+  min-width: 220px;
+}
+
+.field__label {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: 2px solid rgba(124, 251, 255, 0.35);
+  border-color: var(--accent);
+}
+
 .filter-btn {
   padding: 8px 12px;
   border-radius: 12px;
@@ -340,6 +385,20 @@ footer {
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
+}
+
+.empty-state {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--card-border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+.empty-state strong {
+  color: var(--text);
 }
 
 .card::after {

@@ -86,6 +86,28 @@ const posts = [
     tags: ["prompts", "data viz", "analysis"],
     date: "2024-05-08",
   },
+  {
+    title: "Micro-interactions for AI latency",
+    category: "UX",
+    summary: "Design shimmer states, intent capture, and fallbacks that respect model variability.",
+    tags: ["ux", "latency", "microcopy"],
+    date: "2024-05-06",
+  },
+  {
+    title: "Synthetic data for frontend QA",
+    category: "Testing",
+    summary: "Bootstrap regression suites by letting models generate fixtures that mirror edge users.",
+    tags: ["testing", "synthetic", "qa"],
+    date: "2024-05-04",
+    spotlight: true,
+  },
+  {
+    title: "Realtime translations in design tools",
+    category: "Localization",
+    summary: "Add on-canvas translations with streaming models and maintain layout integrity.",
+    tags: ["localization", "multimodal", "streaming"],
+    date: "2024-05-02",
+  },
 ];
 
 const trends = [
@@ -144,6 +166,12 @@ const spotlight = [
   },
 ];
 
+const state = {
+  filter: "all",
+  query: "",
+  sort: "newest",
+};
+
 function createPostCard(post) {
   const wrapper = document.createElement("article");
   wrapper.className = "card";
@@ -169,13 +197,49 @@ function createPostCard(post) {
   return wrapper;
 }
 
-function renderPosts(filterTag) {
+function getFilteredPosts() {
+  const query = state.query.trim().toLowerCase();
+  const byTag = posts.filter((p) => state.filter === "all" || p.tags.includes(state.filter));
+  if (!query) return byTag;
+
+  return byTag.filter((p) => {
+    const haystack = `${p.title} ${p.summary} ${p.tags.join(" ")}`.toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
+function sortPosts(list) {
+  const sorted = [...list];
+  if (state.sort === "title") {
+    return sorted.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  if (state.sort === "spotlight") {
+    return sorted.sort((a, b) => {
+      const spotlightScore = (b.spotlight === true) - (a.spotlight === true);
+      if (spotlightScore !== 0) return spotlightScore;
+      return new Date(b.date) - new Date(a.date);
+    });
+  }
+
+  return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+function renderPosts() {
   const grid = document.getElementById("latest-grid");
   grid.innerHTML = "";
 
-  const filtered = filterTag && filterTag !== "all" ? posts.filter((p) => p.tags.includes(filterTag)) : posts;
+  const filtered = sortPosts(getFilteredPosts());
 
-  filtered.forEach((post) => grid.appendChild(createPostCard(post)));
+  if (!filtered.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.innerHTML = `<strong>No drops match that query.</strong><br />Try another tag or keyword.`;
+    grid.appendChild(empty);
+  } else {
+    filtered.forEach((post) => grid.appendChild(createPostCard(post)));
+  }
+
   document.getElementById("stat-posts").textContent = filtered.length.toString().padStart(2, "0");
 }
 
@@ -187,12 +251,13 @@ function renderFilters() {
 
   tags.forEach((tag) => {
     const btn = document.createElement("button");
-    btn.className = "filter-btn" + (tag === "all" ? " active" : "");
+    btn.className = "filter-btn" + (tag === state.filter ? " active" : "");
     btn.textContent = tag;
     btn.addEventListener("click", () => {
       document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      renderPosts(tag);
+      state.filter = tag;
+      renderPosts();
     });
     filters.appendChild(btn);
   });
@@ -257,11 +322,21 @@ function selectFeatured() {
 
 function init() {
   renderFilters();
-  renderPosts("all");
+  renderPosts();
   renderTrends();
   renderSpotlight();
   renderHeroTags();
   selectFeatured();
+
+  document.getElementById("search").addEventListener("input", (event) => {
+    state.query = event.target.value;
+    renderPosts();
+  });
+
+  document.getElementById("sort").addEventListener("change", (event) => {
+    state.sort = event.target.value;
+    renderPosts();
+  });
 
   document.getElementById("shuffle").addEventListener("click", () => {
     renderHeroTags();

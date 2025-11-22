@@ -66,16 +66,32 @@
       </div>
     </section>
 
-    <section class="section" id="latest">
-      <div class="section__head">
-        <div>
-          <p class="eyebrow">Latest drops</p>
-          <h2>Fresh intel from the AI frontier</h2>
+      <section class="section" id="latest">
+        <div class="section__head">
+          <div>
+            <p class="eyebrow">Latest drops</p>
+            <h2>Fresh intel from the AI frontier</h2>
+          </div>
+          <div class="stacked-controls">
+            <div class="filters" id="filters"></div>
+            <div class="control-row">
+              <label class="field">
+                <span class="field__label">Search</span>
+                <input id="search" type="search" placeholder="Find a topic or tag" />
+              </label>
+              <label class="field">
+                <span class="field__label">Sort</span>
+                <select id="sort">
+                  <option value="newest">Newest first</option>
+                  <option value="spotlight">Spotlight first</option>
+                  <option value="title">Title A–Z</option>
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="filters" id="filters"></div>
-      </div>
-      <div class="grid" id="latest-grid"></div>
-    </section>
+        <div class="grid" id="latest-grid"></div>
+      </section>
 
     <section class="section" id="trends">
       <div class="section__head">
