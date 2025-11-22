@@ -5,7 +5,7 @@ A futuristic AI blog console built with Next.js 14 and Tailwind CSS. It lets you
 - Create posts with title, category, tags, assigned writer, spotlight toggle, body content, and auto-stamped publish date.
 - Edit existing posts from the admin list, without losing spotlight flags or tags.
 - Manage categories and writer profiles from the same screen.
-- Let readers view posts, share links, and leave comments on `/blog`.
+- Let readers view posts, share links (hash-permalinks), and leave comments on `/blog`.
 - Persist data locally in a JSON file by default while keeping API routes ready for a database.
 
 ## Stack

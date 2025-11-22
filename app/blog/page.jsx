@@ -21,10 +21,31 @@ export default function BlogReader() {
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
-        if (data[0]) setActiveId(data[0].id);
       })
       .catch((err) => setError(err.message));
   }, []);
+
+  useEffect(() => {
+    if (posts.length === 0) return;
+    const fromHash = window.location.hash.replace('#', '');
+    const fallbackId = posts[0]?.id || '';
+    if (fromHash && posts.some((post) => post.id === fromHash)) {
+      setActiveId(fromHash);
+    } else {
+      setActiveId((current) => current || fallbackId);
+    }
+  }, [posts]);
+
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hashedId = window.location.hash.replace('#', '');
+      if (hashedId && posts.some((post) => post.id === hashedId)) {
+        setActiveId(hashedId);
+      }
+    };
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [posts]);
 
   useEffect(() => {
     if (!activeId) return;
@@ -70,6 +91,13 @@ export default function BlogReader() {
     }
     await navigator.clipboard.writeText(url);
     alert('Link copied to clipboard');
+  }
+
+  function setActivePost(id) {
+    setActiveId(id);
+    if (id) {
+      window.location.hash = id;
+    }
   }
 
   return (
@@ -138,7 +166,7 @@ export default function BlogReader() {
               {posts.map((post) => (
                 <button
                   key={post.id}
-                  onClick={() => setActiveId(post.id)}
+                  onClick={() => setActivePost(post.id)}
                   className={`w-full rounded-xl border px-3 py-2 text-left transition ${
                     activeId === post.id
                       ? 'border-neon/50 bg-neon/10 text-white'
