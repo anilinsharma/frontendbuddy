@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FrontendBuddy | Futuristic AI Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="site-header">
+    <div class="logo">Frontend<span>Buddy</span></div>
+    <nav class="nav">
+      <a href="#latest">Latest</a>
+      <a href="#trends">AI Trends</a>
+      <a href="#spotlight">Spotlight</a>
+      <a href="#newsletter">Newsletter</a>
+    </nav>
+    <div class="cta-group">
+      <span class="status-pill">Live: AI Signals</span>
+      <button class="btn btn-outline">Dashboard</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Neo-Blogverse · Updated hourly</p>
+        <h1>Decode the <span>latest AI trends</span> shaping the web.</h1>
+        <p class="lede">Stay ahead with laser-focused coverage on multimodal models, agentic workflows, and futuristic UX. Every post is distilled, actionable, and tuned for builders.</p>
+        <div class="hero__actions">
+          <a class="btn" href="#latest">Read the newest drop</a>
+          <button class="btn btn-ghost" id="shuffle">Shuffle signals</button>
+        </div>
+        <div class="pills" id="hero-tags"></div>
+      </div>
+      <div class="hero__panel">
+        <div class="datagrid">
+          <div>
+            <p class="label">Fresh posts</p>
+            <p class="value" id="stat-posts">12</p>
+            <span class="chip positive">+3 today</span>
+          </div>
+          <div>
+            <p class="label">Signal strength</p>
+            <p class="value">98%</p>
+            <span class="chip">real-time</span>
+          </div>
+          <div>
+            <p class="label">Topic velocity</p>
+            <p class="value">7.4x</p>
+            <span class="chip">MoM</span>
+          </div>
+        </div>
+        <div class="gradient-card">
+          <div class="glow-icon">⚡</div>
+          <div>
+            <p class="label">New drop</p>
+            <p class="card-title" id="featured-title">Agent swarms for frontend teams</p>
+            <p class="small">Decoded in under 5 minutes. Tuned for real-world shipping.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="latest">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Latest drops</p>
+          <h2>Fresh intel from the AI frontier</h2>
+        </div>
+        <div class="filters" id="filters"></div>
+      </div>
+      <div class="grid" id="latest-grid"></div>
+    </section>
+
+    <section class="section" id="trends">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">AI Trend Radar</p>
+          <h2>Signals shaping the next release cycle</h2>
+        </div>
+        <p class="lede">We scan research drops, product launches, and dev chatter to surface what matters.</p>
+      </div>
+      <div class="trend-grid" id="trend-grid"></div>
+    </section>
+
+    <section class="section spotlight" id="spotlight">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Labs spotlight</p>
+          <h2>Deep dives &amp; playbooks</h2>
+        </div>
+        <a class="text-link" href="#newsletter">Get weekly digest →</a>
+      </div>
+      <div class="spotlight-grid" id="spotlight-grid"></div>
+    </section>
+
+    <section class="section newsletter" id="newsletter">
+      <div class="newsletter__inner">
+        <div>
+          <p class="eyebrow">Stay in sync</p>
+          <h2>Receive a futuristic dispatch every Friday</h2>
+          <p class="lede">Zero fluff—just curated insights, code snippets, and design patterns to keep your builds on the edge.</p>
+          <form class="newsletter__form">
+            <input type="email" placeholder="you@galaxy.dev" aria-label="Email address" required />
+            <button class="btn" type="submit">Beam me up</button>
+          </form>
+          <p class="microcopy">No spam. Unsubscribe anytime.</p>
+        </div>
+        <div class="holo">
+          <div class="holo__ring"></div>
+          <div class="holo__core">AI</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>FrontendBuddy · Crafted for builders who want tomorrow's signal today.</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">RSS</a>
+      <a href="#">Contact</a>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
