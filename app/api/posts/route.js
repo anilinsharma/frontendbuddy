@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createPost, listPosts, listCategories, listWriters } from '@/app/lib/store';
+import { createPost, listPosts, listCategories, listWriters, getPost } from '@/app/lib/store';
 
 export async function GET() {
   const posts = listPosts();
@@ -23,6 +23,10 @@ export async function POST(request) {
     return NextResponse.json({ error: 'valid writerId is required' }, { status: 400 });
   }
 
+  if (payload.content && payload.content.length > 4000) {
+    return NextResponse.json({ error: 'content is too long' }, { status: 400 });
+  }
+
   const post = createPost({
     title: payload.title,
     categoryId: payload.categoryId,
@@ -33,7 +37,8 @@ export async function POST(request) {
         ? payload.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
         : [],
     spotlight: Boolean(payload.spotlight),
+    content: payload.content || '',
   });
 
-  return NextResponse.json(post, { status: 201 });
+  return NextResponse.json(getPost(post.id), { status: 201 });
 }

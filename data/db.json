@@ -16,7 +16,17 @@
       "writerId": "nova",
       "tags": ["roadmap", "vision"],
       "spotlight": true,
+      "content": "We are tracking model scaling, agent reliability, real-time copilots, safety evals, and edge silicon — with concrete UX reads you can ship this sprint.",
       "publishedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "c1",
+      "postId": "launch-burst",
+      "author": "Synth Reader",
+      "message": "Excited for the agent reliability breakdown — please add benchmarks!",
+      "createdAt": "2024-01-02T12:00:00.000Z"
     }
   ]
 }

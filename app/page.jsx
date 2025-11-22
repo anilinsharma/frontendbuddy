@@ -19,7 +19,8 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [writers, setWriters] = useState([]);
-  const [postForm, setPostForm] = useState({ title: '', categoryId: '', writerId: '', tags: '', spotlight: false });
+  const [postForm, setPostForm] = useState({ title: '', categoryId: '', writerId: '', tags: '', content: '', spotlight: false });
+  const [editingPostId, setEditingPostId] = useState('');
   const [categoryName, setCategoryName] = useState('');
   const [writerForm, setWriterForm] = useState({ name: '', bio: '' });
   const [error, setError] = useState('');
@@ -53,22 +54,59 @@ export default function Home() {
           ? postForm.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
           : [],
       };
-      const created = await jsonRequest('/api/posts', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-      setPostForm((f) => ({ ...f, title: '', tags: '' }));
-      setPosts((prev) => [
-        {
-          ...created,
-          category: categories.find((c) => c.id === created.categoryId)?.name || 'Uncategorized',
-          writer: writers.find((w) => w.id === created.writerId)?.name || 'Unknown',
-        },
-        ...prev,
-      ]);
+      if (editingPostId) {
+        const updated = await jsonRequest(`/api/posts/${editingPostId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+        });
+        setPosts((prev) =>
+          prev.map((post) =>
+            post.id === editingPostId
+              ? {
+                  ...post,
+                  ...updated,
+                  category: categories.find((c) => c.id === updated.categoryId)?.name || post.category,
+                  writer: writers.find((w) => w.id === updated.writerId)?.name || post.writer,
+                }
+              : post
+          )
+        );
+      } else {
+        const created = await jsonRequest('/api/posts', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        setPosts((prev) => [
+          {
+            ...created,
+            category: categories.find((c) => c.id === created.categoryId)?.name || 'Uncategorized',
+            writer: writers.find((w) => w.id === created.writerId)?.name || 'Unknown',
+          },
+          ...prev,
+        ]);
+      }
+      setEditingPostId('');
+      setPostForm((f) => ({ ...f, title: '', tags: '', content: '', spotlight: false }));
     } catch (err) {
       setError(err.message);
     }
+  }
+
+  function startEdit(post) {
+    setEditingPostId(post.id);
+    setPostForm({
+      title: post.title,
+      categoryId: post.categoryId,
+      writerId: post.writerId,
+      tags: post.tags?.join(', ') || '',
+      content: post.content || '',
+      spotlight: Boolean(post.spotlight),
+    });
+  }
+
+  function resetPostForm() {
+    setEditingPostId('');
+    setPostForm((f) => ({ ...f, title: '', tags: '', content: '', spotlight: false }));
   }
 
   async function handleCategorySubmit(e) {
@@ -110,13 +148,22 @@ export default function Home() {
           <span className="h-2 w-2 rounded-full bg-neon shadow-glow" />
           <span>Admin Console</span>
         </div>
-        <Link
-          className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-black/30 px-3 py-1.5 text-sm text-slate-100 transition hover:border-neon hover:text-neon"
-          href="/preview"
-        >
-          View blog preview
-          <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-black/30 px-3 py-1.5 text-sm text-slate-100 transition hover:border-neon hover:text-neon"
+            href="/blog"
+          >
+            Reader mode
+            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+          </Link>
+          <Link
+            className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-black/30 px-3 py-1.5 text-sm text-slate-100 transition hover:border-neon hover:text-neon"
+            href="/preview"
+          >
+            Preview
+            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+          </Link>
+        </div>
       </nav>
 
       <header className={`panel glow-border ${neonGradient}`}>
@@ -145,12 +192,21 @@ export default function Home() {
         <div className="panel glow-border lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="section-title"><PencilSquareIcon className="h-5 w-5 text-neon" /> New Post</p>
-              <p className="section-subtitle">Title, category, tags, writer, and spotlight.</p>
+              <p className="section-title">
+                <PencilSquareIcon className="h-5 w-5 text-neon" /> {editingPostId ? 'Edit Post' : 'New Post'}
+              </p>
+              <p className="section-subtitle">Title, category, tags, writer, spotlight, and body copy.</p>
             </div>
-            <span className="badge">
-              <TagIcon className="h-4 w-4 text-neon" /> Auto date on save
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="badge">
+                <TagIcon className="h-4 w-4 text-neon" /> Auto date on save
+              </span>
+              {editingPostId && (
+                <button type="button" className="badge hover:border-neon/50" onClick={resetPostForm}>
+                  Cancel edit
+                </button>
+              )}
+            </div>
           </div>
           <form className="grid gap-4 md:grid-cols-2" onSubmit={handlePostSubmit}>
             <label className="md:col-span-2 space-y-2">
@@ -199,13 +255,22 @@ export default function Home() {
                 ))}
               </select>
             </label>
-            <label className="space-y-2">
+            <label className="space-y-2 md:col-span-2">
               <span className="text-sm text-slate-200">Tags (comma separated)</span>
               <input
                 className="input"
                 placeholder="ethics, infra, agents"
                 value={postForm.tags}
                 onChange={(e) => setPostForm({ ...postForm, tags: e.target.value })}
+              />
+            </label>
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm text-slate-200">Content</span>
+              <textarea
+                className="input min-h-[140px]"
+                placeholder="Draft a concise, human-friendly take..."
+                value={postForm.content}
+                onChange={(e) => setPostForm({ ...postForm, content: e.target.value })}
               />
             </label>
             <label className="flex items-center gap-3 md:col-span-2">
@@ -220,7 +285,7 @@ export default function Home() {
             <div className="md:col-span-2 flex justify-end">
               <button className="btn-primary" type="submit">
                 <PlusIcon className="h-4 w-4" />
-                Publish Post
+                {editingPostId ? 'Save changes' : 'Publish Post'}
               </button>
             </div>
           </form>
@@ -318,7 +383,19 @@ export default function Home() {
                 <span className="badge border-slate-700 text-slate-300">{post.writer}</span>
                 <span className="text-xs text-slate-500">{new Date(post.publishedAt).toLocaleString()}</span>
               </div>
-              <h3 className="text-xl font-semibold text-white">{post.title}</h3>
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-semibold text-white">{post.title}</h3>
+                  {post.content && <p className="text-sm text-slate-300 line-clamp-3">{post.content}</p>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => startEdit(post)}
+                  className="badge border-neon/50 text-neon hover:bg-neon/10"
+                >
+                  Edit
+                </button>
+              </div>
               {post.tags?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (

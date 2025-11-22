@@ -22,7 +22,18 @@ const defaultDb = {
       writerId: 'nova',
       tags: ['roadmap', 'vision'],
       spotlight: true,
+      content:
+        'We are tracking model scaling, agent reliability, real-time copilots, safety evals, and edge silicon — with concrete UX reads you can ship this sprint.',
       publishedAt: new Date().toISOString(),
+    },
+  ],
+  comments: [
+    {
+      id: 'c1',
+      postId: 'launch-burst',
+      author: 'Synth Reader',
+      message: 'Excited for the agent reliability breakdown — please add benchmarks!',
+      createdAt: new Date().toISOString(),
     },
   ],
 };
@@ -52,6 +63,10 @@ export function listPosts() {
     category: db.categories.find((c) => c.id === post.categoryId)?.name || 'Uncategorized',
     writer: db.writers.find((w) => w.id === post.writerId)?.name || 'Unknown',
   }));
+}
+
+export function getPost(id) {
+  return listPosts().find((post) => post.id === id);
 }
 
 export function listCategories() {
@@ -91,9 +106,52 @@ export function createPost(payload) {
     writerId: payload.writerId,
     tags: payload.tags || [],
     spotlight: Boolean(payload.spotlight),
+    content: payload.content || '',
     publishedAt: new Date().toISOString(),
   };
   db.posts.unshift(post);
   writeDb(db);
   return post;
+}
+
+export function updatePost(id, payload) {
+  const db = readDb();
+  const index = db.posts.findIndex((post) => post.id === id);
+  if (index === -1) return null;
+  db.posts[index] = {
+    ...db.posts[index],
+    title: payload.title ?? db.posts[index].title,
+    categoryId: payload.categoryId ?? db.posts[index].categoryId,
+    writerId: payload.writerId ?? db.posts[index].writerId,
+    tags: Array.isArray(payload.tags)
+      ? payload.tags
+      : typeof payload.tags === 'string'
+        ? payload.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
+        : db.posts[index].tags,
+    spotlight: payload.spotlight ?? db.posts[index].spotlight,
+    content: payload.content ?? db.posts[index].content,
+  };
+  writeDb(db);
+  return db.posts[index];
+}
+
+export function listComments(postId) {
+  const db = readDb();
+  return db.comments.filter((comment) => comment.postId === postId);
+}
+
+export function addComment(postId, payload) {
+  const db = readDb();
+  const postExists = db.posts.some((post) => post.id === postId);
+  if (!postExists) return null;
+  const comment = {
+    id: randomUUID(),
+    postId,
+    author: payload.author || 'Guest',
+    message: payload.message || '',
+    createdAt: new Date().toISOString(),
+  };
+  db.comments.push(comment);
+  writeDb(db);
+  return comment;
 }
